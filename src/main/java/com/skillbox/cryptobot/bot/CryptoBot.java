@@ -1,7 +1,6 @@
 package com.skillbox.cryptobot.bot;
 
 import com.skillbox.cryptobot.service.CommandService;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -39,7 +38,7 @@ public class CryptoBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
-            commandService.start(update.getMessage().getChatId(), this);
+            commandService.handleTextMessage(update.getMessage(), this);
 
         } else if (update.hasCallbackQuery()) {
             String callbackData = update.getCallbackQuery().getData();

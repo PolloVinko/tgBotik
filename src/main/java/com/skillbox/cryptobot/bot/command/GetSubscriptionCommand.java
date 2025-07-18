@@ -32,7 +32,6 @@ public class GetSubscriptionCommand implements IBotCommand {
         answer.setChatId(message.getChatId());
         String price = subscriberService.getSubscribePrice(message.getFrom().getUserName());
         answer.setText(price);
-        log.info(subscriberService.getAll().toString());
 
         try {
             absSender.execute(answer);

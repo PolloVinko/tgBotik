@@ -16,11 +16,8 @@ public class SubscriberValidator {
         };
         return false;
     };
-    public boolean isBigDecimal(String[] arguments) {
-        if (arguments.length == 0) {
-            return false; // аргументы не переданы
-        }
-        return arguments[0].matches("^-?\\d+(\\.\\d+)?$");
+    public boolean isBigDecimal(String argument) {
+        return argument.matches("^-?\\d+(\\.\\d+)?$");
     }
 
 }
