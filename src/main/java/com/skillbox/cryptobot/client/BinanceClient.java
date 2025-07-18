@@ -1,6 +1,7 @@
 package com.skillbox.cryptobot.client;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.concurrent.TimeUnit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,11 +29,11 @@ public class BinanceClient {
                 .setSSLHostnameVerifier(new NoopHostnameVerifier())
                 .build();
     }
-    public double getBitcoinPrice() throws IOException {
+    public BigDecimal getBitcoinPrice() throws IOException {
         log.info("Performing client call to binanceApi to get bitcoin price");
         try {
-            return mapper.readTree(EntityUtils.toString(httpClient.execute(httpGet).getEntity()))
-                    .path("price").asDouble();
+            BigDecimal price = new BigDecimal(mapper.readTree(EntityUtils.toString(httpClient.execute(httpGet).getEntity())).path("price").asDouble());
+            return price;
         } catch (IOException e) {
             log.error("Error while getting price from binance", e);
             throw e;

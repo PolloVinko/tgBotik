@@ -2,8 +2,8 @@ telegram:
   bot:
 #    не вписывайте данные, так как можете отправить в публичный репозиторий
 #    используйте переменные среды для установки значений
-    username: ${BOT_NAME}
-    token: ${BOT_TOKEN}
+    username: investment_success_bot
+    token: 8049962997:AAG_JvvJo3opaiAjqwM2ix3YkzEsnC15l9g
     notify:
       delay:
         value: 10
@@ -13,9 +13,14 @@ binance:
   api:
     getPrice: https://api.binance.com/api/v3/avgPrice?symbol=BTCUSDT
 
-db:
-  driver:
-    name: org.postgresql.Driver
-  url: jdbc:postgresql://localhost:5432/db
-  user: root
-  password: root
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/db
+    username: root
+    password: root
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
