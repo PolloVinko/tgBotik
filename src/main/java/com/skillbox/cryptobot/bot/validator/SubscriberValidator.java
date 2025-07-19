@@ -11,10 +11,7 @@ public class SubscriberValidator {
 
     public boolean isAlreadyExists(String id){
 
-        if(subscribersRepository.existsByTelegramId(id)){
-            return true;
-        };
-        return false;
+        return subscribersRepository.findByTelegramId(id)!=null;
     };
     public boolean isBigDecimal(String argument) {
         return argument.matches("^-?\\d+(\\.\\d+)?$");

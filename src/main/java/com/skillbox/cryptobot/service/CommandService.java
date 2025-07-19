@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.bots.AbsSender;
+import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 @Service
@@ -23,10 +23,13 @@ public class CommandService {
     private final SubscriberValidator subscriberValidator;
     private final SubscriberService subscriberService;
 
-    public void handleCallback(String callback, Long chatId, CryptoBot bot) {
-        switch (callback) {
+    public void handleCallback(Update update, CryptoBot bot) {
+        Long chatId = update.getCallbackQuery().getMessage().getChatId();
+        String userName = update.getCallbackQuery().getFrom().getUserName();
+        switch (update.getCallbackQuery().getData()) {
             case "GET_PRICE" -> getPrice(chatId, bot);
-            case "GET_SUBSCRIPTION" ->getSubscribtion()
+            case "GET_SUBSCRIPTION" -> getSubscription(userName,chatId,bot);
+            case "UNSUBSCRIBE" -> unsubscribe(chatId,userName,bot);
             case "SUBSCRIBE" -> {
                 stateService.setState(chatId, "WAITING_FOR_PRICE");
                 try {
@@ -43,13 +46,12 @@ public class CommandService {
         String state = stateService.getState(message.getChatId());
         switch (state) {
             case "WAITING_FOR_PRICE" -> subscribe(message, bot);
-
-
             default -> {
                 if (message.getText().equals("/start")) {
                     start(message, bot);
                 } else {
                     SendMessage msg = new SendMessage();
+                    msg.setChatId(message.getChatId());
                     msg.setText("🤖 Неизвестная команда. Введите /start");
                     try {
                         bot.execute(msg);
@@ -61,7 +63,7 @@ public class CommandService {
         }
     }
 
-    public void start(Message message, TelegramLongPollingBot bot) {
+    public void start(Message message, CryptoBot bot) {
         SendMessage answer = new SendMessage();
         answer.setChatId(message.getChatId().toString());
         String userName = message.getFrom().getUserName();
@@ -108,14 +110,27 @@ public class CommandService {
             log.error("Error occurred in /subscribe command", e);
         }
     }
-    public void getSubscribtion(Message message, CryptoBot bot){
+    public void getSubscription(String userName, Long chatId, TelegramLongPollingBot bot){
         SendMessage answer = new SendMessage();
-        answer.setChatId(message.getChatId());
-        String price = subscriberService.getSubscribePrice(message.getFrom().getUserName());
+        answer.setChatId(chatId);
+        String price = subscriberService.getSubscribePrice(userName);
         answer.setText(price);
 
         try {
             bot.execute(answer);
+        } catch (TelegramApiException e) {
+            log.error("Error occurred in /subscribe command", e);
+        }
+    }
+
+    public void unsubscribe(Long chatId,String userName, TelegramLongPollingBot bot){
+        SendMessage answer = new SendMessage();
+        answer.setChatId(chatId);
+
+        answer.setText("Подписка отменена");
+        subscriberService.deletePrice(userName);
+        try {
+           bot.execute(answer);
         } catch (TelegramApiException e) {
             log.error("Error occurred in /subscribe command", e);
         }

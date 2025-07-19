@@ -20,6 +20,9 @@ public class KeyboardFactory {
             InlineKeyboardButton getSubscriptionButton = new InlineKeyboardButton("\uD83E\uDDD0 на какую цену я подписан?");
             getSubscriptionButton.setCallbackData("GET_SUBSCRIPTION");
 
+            InlineKeyboardButton unsubscribeButton = new InlineKeyboardButton("\uD83D\uDEAB отменить подписку");
+            unsubscribeButton.setCallbackData("UNSUBSCRIBE");
+
             List<InlineKeyboardButton> row1 = new ArrayList<>();
             row1.add(priceButton);
 
@@ -27,12 +30,16 @@ public class KeyboardFactory {
             row2.add(getSubscriptionButton);
 
             List<InlineKeyboardButton> row3 = new ArrayList<>();
-            row2.add(subscribeButton);
+            row3.add(subscribeButton);
+
+            List<InlineKeyboardButton> row4 = new ArrayList<>();
+            row4.add(unsubscribeButton);
 
             List<List<InlineKeyboardButton>> rows = new ArrayList<>();
             rows.add(row1);
             rows.add(row2);
             rows.add(row3);
+            rows.add(row4);
 
             InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
             markup.setKeyboard(rows);

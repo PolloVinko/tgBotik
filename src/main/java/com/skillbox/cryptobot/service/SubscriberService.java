@@ -3,7 +3,9 @@ package com.skillbox.cryptobot.service;
 import com.skillbox.cryptobot.bot.model.Subscriber;
 import com.skillbox.cryptobot.bot.repository.SubscribersRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.Duration;
@@ -12,6 +14,8 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
+@Slf4j
 public class SubscriberService {
     private final SubscribersRepository subscribersRepository;
 
@@ -22,6 +26,7 @@ public class SubscriberService {
         subscriber.setChatId(chatId);
         subscriber.setNotificationTime(Instant.now().minus(Duration.ofMinutes(10)));
         subscribersRepository.save(subscriber);
+        log.info("New subscriber " + id + " has been created");
 
 
     }

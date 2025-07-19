@@ -41,9 +41,7 @@ public class CryptoBot extends TelegramLongPollingBot {
             commandService.handleTextMessage(update.getMessage(), this);
 
         } else if (update.hasCallbackQuery()) {
-            String callbackData = update.getCallbackQuery().getData();
-            Long chatId = update.getCallbackQuery().getMessage().getChatId();
-            commandService.handleCallback(callbackData, chatId, this);
+            commandService.handleCallback(update, this);
         }
     }
 }
