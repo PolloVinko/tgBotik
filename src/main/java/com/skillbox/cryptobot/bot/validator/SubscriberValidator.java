@@ -9,12 +9,11 @@ import org.springframework.stereotype.Component;
 public class SubscriberValidator {
     private final SubscribersRepository subscribersRepository;
 
-    public boolean isAlreadyExists(String id){
+    public boolean isAlreadyExists(String id) {
+        return subscribersRepository.findByTelegramId(id) != null;
+    }
 
-        return subscribersRepository.findByTelegramId(id)!=null;
-    };
     public boolean isBigDecimal(String argument) {
         return argument.matches("^-?\\d+(\\.\\d+)?$");
     }
-
 }

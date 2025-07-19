@@ -26,9 +26,8 @@ public class PriceTracker {
     private final CryptoCurrencyService cryptoCurrencyService;
     private final AbsSender absSender;
 
-    @Scheduled(fixedRate = 50000)
+    @Scheduled(fixedRate = 120000)
     public void priceTracking() throws IOException {
-        log.info("Я СДЕЛАЛ");
 
         BigDecimal price = cryptoCurrencyService.getBitcoinPrice();
         Instant tenMinutesAgo = Instant.now().minus(Duration.ofMinutes(10));
@@ -41,7 +40,6 @@ public class PriceTracker {
                 throw new RuntimeException(e);
             }
         });
-
     }
 
     private void getMessage(Subscriber subscriber) throws IOException {
@@ -57,5 +55,4 @@ public class PriceTracker {
             log.error("Error", e);
         }
     }
-
 }

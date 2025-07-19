@@ -2,11 +2,9 @@ package com.skillbox.cryptobot.client;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.concurrent.TimeUnit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
@@ -29,6 +27,7 @@ public class BinanceClient {
                 .setSSLHostnameVerifier(new NoopHostnameVerifier())
                 .build();
     }
+
     public BigDecimal getBitcoinPrice() throws IOException {
         log.info("Performing client call to binanceApi to get bitcoin price");
         try {
