@@ -140,8 +140,7 @@ public class CommandService {
         Long chatId = callbackQuery.getMessage().getChatId();
         String userName = callbackQuery.getFrom().getUserName();
         answer.setChatId(chatId);
-        answer.setText("Подписка отменена");
-        subscriberService.deletePrice(userName);
+        answer.setText(subscriberService.deletePrice(userName));
 
         try {
             answer.setReplyMarkup(KeyboardFactory.mainMenu());

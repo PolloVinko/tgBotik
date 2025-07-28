@@ -18,6 +18,7 @@ import java.util.List;
 @Slf4j
 public class SubscriberService {
     private final SubscribersRepository subscribersRepository;
+    private static final String NO_SUBSCRIPTION_YET = "Активные подписки отсутствуют";
 
     public void createSubscriber(String id,  Long chatId) {
 
@@ -27,8 +28,6 @@ public class SubscriberService {
         subscriber.setNotificationTime(Instant.now().minus(Duration.ofMinutes(10)));
         subscribersRepository.save(subscriber);
         log.info("New subscriber " + id + " has been created");
-
-
     }
 
     public List<String> getAll(){
@@ -36,12 +35,15 @@ public class SubscriberService {
     }
 
     public void updatePrice(String price, String id){
+
         Subscriber subscriber = subscribersRepository.findByTelegramId(id);
         BigDecimal bigDecimalPrice = new BigDecimal(price);
         subscriber.setPrice(bigDecimalPrice);
         subscribersRepository.save(subscriber);
     }
+
     public void updateNotificationTime(Long id){
+
         Subscriber subscriber = subscribersRepository.findById(id)
                 .orElseThrow();
                subscriber.setNotificationTime(Instant.now());
@@ -49,16 +51,27 @@ public class SubscriberService {
     }
 
     public String getSubscribePrice(String id){
-        if(!(subscribersRepository.findByTelegramId(id).getPrice()==null)) {
-            String price = subscribersRepository.findByTelegramId(id).getPrice().toString();
+
+        Subscriber subscriber = subscribersRepository.findByTelegramId(id);
+
+        if(!(subscriber.getPrice()==null)) {
+            String price = subscriber.getPrice().toString();
             return  "Вы подписаны на стоимость биткоина " + price + " USD";
         }
-        return "Активные подписки отсутствуют";
+
+        return NO_SUBSCRIPTION_YET;
     }
 
-    public void deletePrice(String id){
+    public String deletePrice(String id){
+
         Subscriber subscriber = subscribersRepository.findByTelegramId(id);
-        subscriber.setPrice(null);
-        subscribersRepository.save(subscriber);
+
+        if(!(subscriber.getPrice()==null)) {
+            subscriber.setPrice(null);
+            subscribersRepository.save(subscriber);
+            return "Подписка отменена";
+        }
+
+        return NO_SUBSCRIPTION_YET;
     }
 }
